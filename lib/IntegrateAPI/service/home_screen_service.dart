@@ -40,7 +40,7 @@ class RemoteApiHomeData {
   //     } else {
   //       throw CustomException(ExceptionType.unknownError);
   //     }
-  //   } on CustomException catch (e) {
+  //   } on CustomException catch (e) {  
   //     print('CustomException: ${e.errorMessage()}');
   //     rethrow; // Rethrow the CustomException
   //   } on Exception catch (e) {

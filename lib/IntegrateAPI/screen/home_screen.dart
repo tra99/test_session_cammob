@@ -114,6 +114,8 @@
 //   }
 // }
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:test_cammob/DarkLightMode/provider/them_provider.dart';
 import 'package:test_cammob/IntegrateAPI/service/home_screen_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -129,6 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List posts=[];
   final scrollController=ScrollController();
   bool isLoading=false;
+  bool light=true;
 
   @override
   void initState() {
@@ -151,6 +154,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         centerTitle: true,
+        actions: [
+          Switch(value: light, onChanged: (bool value){
+            setState(() {
+              light=value;
+              Provider.of<ThemProvider>(context,listen: false).toggleTheme();
+            });
+          })
+        ],
       ),
       body: ListView.builder(
         padding: EdgeInsets.all(10),
