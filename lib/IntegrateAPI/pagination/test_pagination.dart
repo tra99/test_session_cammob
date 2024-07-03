@@ -1,108 +1,6 @@
-// import 'dart:convert';
-
-// import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
-
-// class HomePage extends StatefulWidget {
-//   const HomePage({super.key});
-
-//   @override
-//   State<HomePage> createState() => _HomePageState();
-// }
-
-// class _HomePageState extends State<HomePage> {
-  
-//   final scrollController=ScrollController();
-//   List posts = [];
-//   int page=1;
-//   bool isLoading=false;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     scrollController.addListener(_scrollListener);
-//     fetchPosts();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Colors.blue,
-//         title: const Text(
-//           "Pagination",
-//           style: TextStyle(
-//             color: Colors.white,
-//             fontWeight: FontWeight.bold,
-//           ),
-//         ),
-//         centerTitle: true,
-//       ),
-//       body: ListView.builder(
-//         padding: EdgeInsets.all(10),
-//         controller: scrollController,
-//           itemCount:isLoading?  posts.length+1:posts.length,
-//           itemBuilder: (context, index) {
-//            if(index<posts.length){
-//             final post = posts[index];
-//             final title = post['email'];
-//             final subtitle = post['name'];
-//             return Card(
-//               elevation: 2,
-//               color: Colors.white,
-//               child: ListTile(
-//                 leading: CircleAvatar(
-//                   backgroundColor: Colors.blue,
-//                   child: Text("${index+1}", style: const TextStyle(
-//                     color: Colors.white,
-//                     fontWeight: FontWeight.bold,
-//                   ),),
-//                 ),
-//                 title: Text("$title"),
-//                 subtitle: Text('$subtitle'),
-//               ),
-//             );
-//            }else{
-//               return Center(
-//                 child: CircularProgressIndicator(),
-//               );
-//            }
-//           }
-//         ),
-//     );
-//   }
-
-//   Future<void> fetchPosts() async {
-//     final url =
-//         'https://jsonplaceholder.typicode.com/comments?_page=$page&_limit=10';
-//         print("$url");
-//     final uri = Uri.parse(url);
-//     final response = await http.get(uri);
-//     if (response.statusCode == 200) {
-//       final List<dynamic> jsonList = jsonDecode(response.body) as List<dynamic>;
-//       setState(() {
-//         posts = posts+jsonList;
-//       });
-//     } else {
-
-//     }
-//   }
-
-//   Future<void> _scrollListener()async{
-//     if(isLoading) return;
-//     if(scrollController.position.pixels==scrollController.position.maxScrollExtent){
-//       setState(() {
-//         isLoading=true;
-//       });
-//       page=page+1;
-//       await fetchPosts();
-//       setState(() {
-//         isLoading=false;
-//       });
-//     }
-//   }
-// }
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:test_cammob/IntegrateAPI/provider/api_provider.dart';
 import 'package:test_cammob/IntegrateAPI/service/home_screen_service.dart';
 
 class HomePage extends StatefulWidget {
@@ -114,21 +12,27 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final scrollController = ScrollController();
-  List posts = [];
-  int page = 1;
-  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
     scrollController.addListener(_scrollListener);
-    fetchPosts();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<HomeDataProvider>(context, listen: false).getAllHomeData();
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollController.removeListener(_scrollListener);
+    scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: const Text(
@@ -140,65 +44,96 @@ class _HomePageState extends State<HomePage> {
         ),
         centerTitle: true,
       ),
-      body: ListView.builder(
-        padding: EdgeInsets.all(10),
-        controller: scrollController,
-        itemCount: isLoading ? posts.length + 1 : posts.length,
-        itemBuilder: (context, index) {
-          if (index < posts.length) {
-            final post = posts[index];
-            final title = post['email'];
-            final subtitle = post['name'];
-            return Card(
-              elevation: 2,
-              color: Colors.white,
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: Colors.blue,
-                  child: Text(
-                    "${index + 1}",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                title: Text("$title"),
-                subtitle: Text('$subtitle'),
-              ),
-            );
-          } else {
+      body: Consumer<HomeDataProvider>(
+        builder: (context, value, child) {
+          if (value.isLoading && value.homeData.isEmpty) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
+
+          final datas = value.homeData;
+          return ListView.builder(
+            padding: const EdgeInsets.all(10),
+            controller: scrollController,
+            itemCount: value.isLoading ? datas.length + 1 : datas.length,
+            itemBuilder: (context, index) {
+              if (index == datas.length) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              final data = datas[index];
+              return Card(
+                elevation: 2,
+                color: Colors.white,
+                child: ListTile(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>DetailPaginationPage(id: data.id, name: data.name, email: data.email, body: data.body, postId: data.postId)));
+                  },
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.blue,
+                    child: Text(
+                      data.id.toString(),
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  title: Text(data.email),
+                  subtitle: Text(data.name),
+                ),
+              );
+            },
+          );
         },
       ),
     );
   }
 
-  Future<void> fetchPosts() async {
-    try {
-      final newPosts = await RemoteApiHomeData.fetchPosts(page);
-      setState(() {
-        posts = posts + newPosts;
-      });
-    } catch (e) {
-      print(e); // Handle error appropriately
+  Future<void> _scrollListener() async {
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent) {
+      Provider.of<HomeDataProvider>(context, listen: false)
+          .getAllHomeData(loadMore: true);
     }
   }
+}
 
-  Future<void> _scrollListener() async {
-    if (isLoading) return;
-    if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
-      setState(() {
-        isLoading = true;
-      });
-      page = page + 1;
-      await fetchPosts();
-      setState(() {
-        isLoading = false;
-      });
-    }
+class DetailPaginationPage extends StatelessWidget {
+  final int id;
+  final String name;
+  final String email;
+  final String body;
+  final int postId;
+  const DetailPaginationPage({
+    super.key,
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.body,
+    required this.postId,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Info Detail"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("ID: $id"),
+            Text("Name: $name"),
+            Text("Email: $email"),
+            Text("PostId: $postId"),
+            Text("Paragrapg: $body"),
+          ],
+        ),
+      ),
+    );
   }
 }

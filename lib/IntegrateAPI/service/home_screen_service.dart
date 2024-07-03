@@ -1,22 +1,29 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../exceptions/custom_exception.dart';
-import '../model/exception.dart';
 import '../model/home_model.dart';
 
 class RemoteApiHomeData {
-  static Future<List<dynamic>> fetchPosts(int page) async {
+  static Future<List<HomeModel>> fetchPosts(int page) async {
     final url = 'https://jsonplaceholder.typicode.com/comments?_page=$page&_limit=10';
-    print("$url");
+    print(url);
     final uri = Uri.parse(url);
     final response = await http.get(uri);
     if (response.statusCode == 200) {
-      final List<dynamic> jsonList = jsonDecode(response.body) as List<dynamic>;
-      return jsonList;
-    } else {
-      throw Exception('Failed to load posts');
+      final jsonList = jsonDecode(response.body) as List;
+      final homeDataLists = jsonList.map((e) {
+        return HomeModel(
+          id: e["id"],
+          name: e["name"],
+          email: e["email"],
+          body: e["body"],
+          postId: e["postId"],
+        );
+      }).toList();
+      return homeDataLists;
     }
+    return [];
   }
+}
   // static Future<List<HomeModel>> fetchHomeData(int pageKey, int pageSize) async {
   //   try {
   //     final response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/comments?_page=$pageKey&_limit=$pageSize'));
@@ -48,4 +55,4 @@ class RemoteApiHomeData {
   //     throw CustomException(ExceptionType.unknownError);
   //   }
   // }
-}
+

@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:test_cammob/IntegrateAPI/screen/home_screen.dart';
 import 'package:test_cammob/IntegrateAPI/auth/signup_screen.dart';
 
+import '../../providerTest1/provider_class.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -191,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       if(formKey.currentState!.validate()){
                         _login();
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>const HomeScreen()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>const ListCardItems()));
                       }
                     },
                     style: ElevatedButton.styleFrom(

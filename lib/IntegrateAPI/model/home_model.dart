@@ -13,13 +13,13 @@ class HomeModel {
     required this.postId,
   });
 
-  factory HomeModel.fromJson(Map<String, dynamic> json) {
-    return HomeModel(
-      id: json["id"],
-      name: json["name"],
-      email: json["email"],
-      body: json["body"],
-      postId: json["postId"],
-    );
-  }
+  // factory HomeModel.fromJson(Map<String, dynamic> json) {
+  //   return HomeModel(
+  //     id: json["id"],
+  //     name: json["name"],
+  //     email: json["email"],
+  //     body: json["body"],
+  //     postId: json["postId"],
+  //   );
+  // }
 }

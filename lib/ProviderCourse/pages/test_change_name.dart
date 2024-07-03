@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:test_cammob/main.dart';
 import 'package:test_cammob/ProviderCourse/providers/change_name_provider.dart';
 
 class TestChangeNameProvider extends StatelessWidget {
@@ -14,7 +12,7 @@ class TestChangeNameProvider extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Change Username"),
+        title: const Text("Change Username"),
         backgroundColor: Colors.green,
         centerTitle: true,
       ),
@@ -23,19 +21,19 @@ class TestChangeNameProvider extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Center(
-              child: Text(context.watch<ChangeNameProvider>().username.toString(),style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
+              child: Text(context.watch<ChangeNameProvider>().username.toString(),style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
             ),
-            SizedBox(height: 200,),
+            const SizedBox(height: 200,),
             Padding(
               padding: const EdgeInsets.only(left: 30,right: 30),
               child: TextField(
                 controller: _userNameController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   label: Text("Username"),
                 ),
               ),
             ),
-            SizedBox(height: 100,),
+            const SizedBox(height: 100,),
             Container(
               width: 200,
               height: 50,
@@ -48,7 +46,7 @@ class TestChangeNameProvider extends StatelessWidget {
                   String newName=_userNameController.text;
                   context.read<ChangeNameProvider>().ChangeName(newUserName: newName);
               }, 
-              child: Text("Update",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)
+              child: const Text("Update",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)
               ),
             )
           ],

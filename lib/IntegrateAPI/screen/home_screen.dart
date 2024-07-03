@@ -164,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: ListView.builder(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         controller: scrollController,
         itemCount: isLoading ? posts.length+1:posts.length,
         itemBuilder: (context,index){
@@ -203,9 +203,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> fetchData()async{
     try {
-      final newPosts=await RemoteApiHomeData.fetchPosts(page);
+      // final newPosts=await RemoteApiHomeData.fetchPosts(page);
       setState(() {
-        posts=posts+newPosts;
+        // posts=posts+newPosts;
       });
     } catch (e) {
       print(e);
