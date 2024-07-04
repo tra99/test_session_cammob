@@ -23,9 +23,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(
-              height: 60,
+              height: 120,
             ),
             Image.asset("assets/png/coffee_logo.png", width: 200),
             const SizedBox(height: 20),

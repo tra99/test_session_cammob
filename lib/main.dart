@@ -10,22 +10,42 @@ import 'package:test_cammob/ListTileProvider/screen/list_card.dart';
 import 'package:test_cammob/providerTest1/provider_class.dart';
 import 'FlutterGen/components/card.dart';
 import 'IntegrateAPI/pagination/test_pagination.dart';
+import 'providerTest1/DarkLight/provider.dart';
+
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:test_cammob/IntegrateAPI/provider/api_provider.dart';
+import 'package:test_cammob/providerTest1/DarkLight/provider.dart';
+
+import 'providerTest1/Splashpage/splah_screen.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ListProvider()),
-        ChangeNotifierProvider(create: (context) => HomeDataProvider()),
-        // Add more providers here
+        ChangeNotifierProvider(create: (_) => DarkThemeProvider()),
+        ChangeNotifierProvider(create: (_) => HomeDataProvider()),
+        ChangeNotifierProvider(create: (_) => ListProvider()),
       ],
-      child: const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: ListCardItems(),
-      ),
+      child: MyApp(),
     ),
   );
 }
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final themeProvider = Provider.of<DarkThemeProvider>(context);
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: themeProvider.darkTheme ? ThemeMode.dark : ThemeMode.light,
+      home: ListCardItems(),
+    );
+  }
+}
+
 
 // class MyApp extends StatelessWidget {
 //   const MyApp({super.key});

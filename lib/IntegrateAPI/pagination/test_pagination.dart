@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_cammob/IntegrateAPI/provider/api_provider.dart';
-import 'package:test_cammob/IntegrateAPI/service/home_screen_service.dart';
+import 'package:test_cammob/providerTest1/DarkLight/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,6 +16,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    final themeProvider = Provider.of<DarkThemeProvider>(context, listen: false);
+    themeProvider.getCurrentAppTheme();
     scrollController.addListener(_scrollListener);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Provider.of<HomeDataProvider>(context, listen: false).getAllHomeData();
@@ -31,6 +33,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
@@ -43,6 +46,14 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         centerTitle: true,
+        // leading: Checkbox(
+        //   value: themeChange.darkTheme,
+        //   onChanged: (bool? value) {
+        //     if (value != null) {
+        //       themeChange.darkTheme = value;
+        //     }   
+        //   },
+        // ),
       ),
       body: Consumer<HomeDataProvider>(
         builder: (context, value, child) {
@@ -70,7 +81,18 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.white,
                 child: ListTile(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>DetailPaginationPage(id: data.id, name: data.name, email: data.email, body: data.body, postId: data.postId)));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailPaginationPage(
+                          id: data.id,
+                          name: data.name,
+                          email: data.email,
+                          body: data.body,
+                          postId: data.postId,
+                        ),
+                      ),
+                    );
                   },
                   leading: CircleAvatar(
                     backgroundColor: Colors.blue,
@@ -106,6 +128,7 @@ class DetailPaginationPage extends StatelessWidget {
   final String email;
   final String body;
   final int postId;
+
   const DetailPaginationPage({
     super.key,
     required this.id,
@@ -119,7 +142,7 @@ class DetailPaginationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Info Detail"),
+        title: const Text("Info Detail"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -130,7 +153,7 @@ class DetailPaginationPage extends StatelessWidget {
             Text("Name: $name"),
             Text("Email: $email"),
             Text("PostId: $postId"),
-            Text("Paragrapg: $body"),
+            Text("Paragraph: $body"),
           ],
         ),
       ),

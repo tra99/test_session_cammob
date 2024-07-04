@@ -77,9 +77,10 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Form(
           key: formKey,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(
-                height: 70,
+                height: 150,
               ),
               Center(child: Image.asset("assets/png/coffee_logo.png", width: 200)),
               const SizedBox(height: 20),
