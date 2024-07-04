@@ -1,0 +1,11 @@
+{
+    "checkout":"Verificar",
+    "shipping_info":"Información de envío",
+    "payment":"Pago",
+    "masterCard":"Tarjeta maestra",
+    "payPal":"Paypal",
+    "bitCoin":"Bitcoin",
+    "moreMethods":"Más Métodos",
+    "total":"Total",
+    "pay":"Pagar"
+}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_cammob/IntegrateAPI/provider/api_provider.dart';
+import 'package:test_cammob/MuliLanguage/swap_language.dart';
 import 'package:test_cammob/providerTest1/DarkLight/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -54,6 +55,23 @@ class _HomePageState extends State<HomePage> {
         //     }   
         //   },
         // ),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>const ChangeLanguage()));
+            },
+            child: const Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Row(
+                children: [
+                  Icon(Icons.language),
+                  SizedBox(width: 10,),
+                  Text("Change",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                ],
+              ),
+            ),
+          )
+        ],
       ),
       body: Consumer<HomeDataProvider>(
         builder: (context, value, child) {

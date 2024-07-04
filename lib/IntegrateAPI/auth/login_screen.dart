@@ -217,7 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const Text("Don't have account yet?",),
               const SizedBox(height: 10,),
               Padding(
-                padding: const EdgeInsets.only(left: 20,right: 20,),
+                padding: const EdgeInsets.only(left: 20,right: 20,bottom: 20),
                 child: SizedBox(
                   width: double.infinity,
                   height: 50,

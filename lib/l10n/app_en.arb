@@ -1,0 +1,11 @@
+{
+    "checkout":"Checkout",
+    "shipping_info":"Shipping Information",
+    "payment":"Payment",
+    "masterCard":"Master Card",
+    "payPal":"Paypal",
+    "bitCoin":"Bitcoin",
+    "moreMethods":"More methods",
+    "total":"Total",
+    "pay":"Pay"
+}
