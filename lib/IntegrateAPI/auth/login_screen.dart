@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:test_cammob/IntegrateAPI/screen/home_screen.dart';
 import 'package:test_cammob/IntegrateAPI/auth/signup_screen.dart';
@@ -15,25 +14,22 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _gmailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  final TextEditingController _gmailController=TextEditingController();
-  final TextEditingController _passwordController=TextEditingController();
-
-  final formKey=GlobalKey<FormState>();
-  String email="";
-  String password="";
+  final formKey = GlobalKey<FormState>();
+  String email = "";
+  String password = "";
   String? errorMessage;
 
   Future<void> _login() async {
-
     final String username = _gmailController.text;
     final String password = _passwordController.text;
 
     try {
       final response = await http.post(
-        Uri.parse('${dotenv.env['BASE_URL']}/user/signin?username=$username&password=$password'),
+        Uri.parse('http://10.0.2.2:7000/api/user/signin?username=$username&password=$password'),
       );
-
 
       if (response.statusCode == 200) {
         final responseData = response.body;
@@ -42,15 +38,15 @@ class _LoginScreenState extends State<LoginScreen> {
           Future.delayed(
             const Duration(milliseconds: 500),
             () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => const HomeScreenAPI()),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ListCardItems()),
+              );
             },
           );
         } else {
           setState(() {
-            errorMessage = "Incorrect account";
+            errorMessage = "Disconection...";
           });
         }
       } else {
@@ -58,19 +54,20 @@ class _LoginScreenState extends State<LoginScreen> {
           errorMessage = "An error occurred. Please try again later.";
         });
       }
-
     } catch (e) {
       setState(() {
-        errorMessage = "An error occurred. Please try again later.";
+        errorMessage = "An error occurred: ${e.toString()}";
       });
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Color.fromARGB(255, 78, 64, 59),
-      statusBarBrightness: Brightness.dark, 
+      statusBarBrightness: Brightness.dark,
     ));
     return Scaffold(
       body: SingleChildScrollView(
@@ -82,16 +79,15 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 150,
               ),
-              Center(child: Image.asset("assets/png/coffee_logo.png", width: 200)),
+              Center(
+                  child: Image.asset("assets/png/coffee_logo.png", width: 200)),
               const SizedBox(height: 20),
-
               const SizedBox(height: 20),
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: EdgeInsets.only(left: 20.0),
-                  child:
-                      Text("Enter your username"),
+                  child: Text("Enter your username"),
                 ),
               ),
               const SizedBox(height: 6),
@@ -104,12 +100,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Color.fromARGB(255, 83, 62, 54)),
+                        borderSide: BorderSide(
+                            color: Color.fromARGB(255, 83, 62, 54)),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(
-                          color: Color.fromARGB(255, 83, 62, 54)),
+                            color: Color.fromARGB(255, 83, 62, 54)),
                       ),
                     ),
                     onChanged: (value) {
@@ -117,11 +114,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         email = value;
                       });
                     },
-                    
                   ),
                 ),
               ),
-        
               const SizedBox(
                 height: 18,
               ),
@@ -150,19 +145,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(
-                            color: Color.fromARGB(255, 83, 62,54)), 
+                        borderSide:
+                            BorderSide(color: Color.fromARGB(255, 83, 62, 54)),
                       ),
                     ),
                     validator: (value) {
-                      if(value!.length<6){
+                      if (value!.length < 6) {
                         return "Password must have more than six characters";
                       }
                       return null;
                     },
                     onChanged: (value) {
                       setState(() {
-                        password=value;
+                        password = value;
                       });
                     },
                   ),
@@ -192,14 +187,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () {
-                      if(formKey.currentState!.validate()){
+                      if (formKey.currentState!.validate()) {
                         _login();
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>const ListCardItems()));
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(builder: (context) => const ListCardItems()),
+                        // );
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: const Color.fromARGB(255, 106, 85, 77),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), 
+                      foregroundColor: Colors.white,
+                      backgroundColor:
+                          const Color.fromARGB(255, 106, 85, 77),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -211,27 +212,46 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
+              if (errorMessage != null)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    errorMessage!,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
               const SizedBox(
                 height: 20,
               ),
-              const Text("Don't have account yet?",),
-              const SizedBox(height: 10,),
+              const Text(
+                "Don't have account yet?",
+              ),
+              const SizedBox(
+                height: 10,
+              ),
               Padding(
-                padding: const EdgeInsets.only(left: 20,right: 20,bottom: 20),
+                padding:
+                    const EdgeInsets.only(left: 20, right: 20, bottom: 20),
                 child: SizedBox(
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
-                        context,MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const RegisterScreen()),
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: const Color.fromARGB(255, 106, 85, 77), backgroundColor: const Color.fromARGB(255, 244, 225, 219),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      foregroundColor:
+                          const Color.fromARGB(255, 106, 85, 77),
+                      backgroundColor:
+                          const Color.fromARGB(255, 244, 225, 219),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8), 
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                     child: const Text(
@@ -248,3 +268,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
+
+
+
+

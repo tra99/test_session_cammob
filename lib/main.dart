@@ -1,18 +1,26 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:test_cammob/IntegrateAPI/provider/api_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:test_cammob/MuliLanguage/provider/change_language_provider.dart';
+import 'package:test_cammob/firebase_options.dart';
 import 'package:test_cammob/providerTest1/Splashpage/splah_screen.dart';
 import 'package:test_cammob/providerTest1/provider_class.dart';
+import 'package:test_cammob/providerTest1/screen_notifiaction/firebase_api.dart';
+import 'package:test_cammob/providerTest1/screen_notifiaction/notification_push.dart';
 import 'MuliLanguage/swap_language.dart';
 import 'providerTest1/DarkLight/provider.dart';
 
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+final navigatorKey=GlobalKey<NavigatorState>();
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform
+  );
+  await FirebaseApi().initNotification();
   runApp(
     MultiProvider(
       providers: [
@@ -41,6 +49,11 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: MySplashScreen(),
+      // home: MyNotificationScreen(),
+      navigatorKey: navigatorKey,
+      routes: {
+        '/myHomePageNotification':(context)=>MyHomePageNotification(),
+      },
     );
   }
 }

@@ -247,12 +247,35 @@ class ListCardItems extends StatelessWidget {
                               );
                             },
                           ),
+                          // IconButton(
+                          //   icon: Icon(data.delete),
+                          //   onPressed: () {
+                          //     provide.removeItem(index);
+                          //   },
+                          // ),
                           IconButton(
-                            icon: Icon(data.delete),
-                            onPressed: () {
-                              provide.removeItem(index);
-                            },
-                          ),
+                            onPressed: () => showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                title: const Text('AlertDialog'),
+                                content: const Text('Are you want to continue?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                                    child: const Text('Cancel',style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600),),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      provide.removeItem(index);
+                                      Navigator.pop(context, 'OK');
+                                    } ,
+                                    child: const Text('OK',style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600),),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            icon: Icon(Icons.delete),
+                          )
                         ],
                       ),
                     ),

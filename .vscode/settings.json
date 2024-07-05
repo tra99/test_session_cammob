@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "C:/I4/test_cammob/linux"
+    "cmake.sourceDirectory": "C:/I4/test_cammob/linux",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

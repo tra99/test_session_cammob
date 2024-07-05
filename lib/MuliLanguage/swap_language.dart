@@ -26,14 +26,14 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
         leading: GestureDetector(
           child: const Icon(
             Icons.arrow_back,
-            color: Color.fromARGB(255, 253, 173, 162),
+            // color: Color.fromARGB(255, 253, 173, 162),
           ),
         ),
         centerTitle: true,
         title: Text(
           AppLocalizations.of(context)!.checkout,
           style: const TextStyle(
-              color: Color.fromARGB(255, 253, 173, 162),
+              // color: Colors.blue,
               fontSize: 22,
               fontWeight: FontWeight.w600),
         ),
